@@ -1,7 +1,4 @@
-# hbt_analysis_template_v22_fast.py
-# ------------------------------------------------------------
-# Fast HBT simulator/fit: synthesize the correlation histogram
-# directly (no giant time-tag arrays). Safe for long T and high rates.
+
 # ------------------------------------------------------------
 
 from dataclasses import dataclass
@@ -24,15 +21,7 @@ class SimParams:
 
 # ---------------- Fast histogram synthesis ----------------
 def synthesize_histogram_fast(params: SimParams, rng=None):
-    """
-    Build the correlation histogram directly:
-      expected baseline per bin: lam0 = R_A * R_B * T * Δt
-      expected g2(τ): 1 + ε * exp(-τ^2 / (2 σ_τ^2))
-      counts_k ~ Poisson(lam0 * g2(τ_k))
-    Returns:
-      tau_ps [nbins], counts [nbins, int64], bin_ps [ps], lam0 (baseline pairs per bin)
-      N_A_exp, N_B_exp (expected singles, no arrays allocated)
-    """
+
     if rng is None:
         rng = np.random.default_rng(params.seed)
 
@@ -125,7 +114,7 @@ def demo_fast():
  #       rate_A=5e6, rate_B=5e6,
         rate_A=1e7, rate_B=1e7,
 #        T=1800.0,               # long acquisition (30 min)
-        T=36000.0,               # long acquisition (60 min)
+        T=3600.0,               # long acquisition (60 min)
         epsilon=1e-3,           # small correlation amplitude (OSR-like)
         sigma_tau_ps=50.0,
         window_ps=1000.0,
