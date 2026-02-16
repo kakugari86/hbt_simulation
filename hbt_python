@@ -34,6 +34,18 @@ def synthesize_histogram_fast(params: SimParams, rng=None):
 
     # expected g2(τ) shape
     g2_exp = 1.0 + params.epsilon * np.exp(-0.5 * (tau_ps / params.sigma_tau_ps) ** 2)
+    #bin-average
+    sub_div = 100
+    g2_acc = np.zeros_like(tau_ps, dtype=float)
+    
+    for i in range(sub_div):
+        # sub-bin sampling
+        offset = (i / (sub_div - 1) - 0.5) * params.bin_ps
+        sample_tau = tau_ps + offset
+        g2_acc += 1.0 + params.epsilon * np.exp(-0.5 * (sample_tau / params.sigma_tau_ps) ** 2)
+    
+    g2_exp = g2_acc / sub_div 
+
 
     # draw Poisson counts per bin (int64)
     lam = lam0 * g2_exp
